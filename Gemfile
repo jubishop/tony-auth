@@ -18,8 +18,10 @@ group :development do
   end
 
   source 'https://www.jubigems.org' do
+    gem 'core'
     gem 'core-test'
     gem 'rakegem'
+    gem 'tony'
     gem 'tony-test'
   end
 end
