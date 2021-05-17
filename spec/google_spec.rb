@@ -24,13 +24,12 @@ RSpec.describe(Tony::Auth::Google, type: :feature) {
     visit(Tony::Auth::Google.url(FakeRequest.new('http://localhost:31337'),
                                  redirect: '/'))
     login
-    click_button('Allow')
-    File.write('google_login.txt', page.body)
     begin
-      expect(page).to(have_content(':redirect=>"/"'))
-    rescue StandardError => error
-      File.write('google_login.txt', page.body)
-      raise error
+      click_button('Allow')
+    rescue StandardError
+      # Sometimes we don't get this page. /shrug
     end
+    File.write('google_login.txt', page.body)
+    expect(page).to(have_content(':redirect=>"/"'))
   }
 }
