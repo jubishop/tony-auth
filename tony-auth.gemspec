@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'tony-auth'
-  spec.version       = '0.6'
+  spec.version       = '0.7'
   spec.summary       = %q(Middlewares to help login with 3rd party services.)
   spec.authors       = ['Justin Bishop']
   spec.email         = ['jubishop@gmail.com']

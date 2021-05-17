@@ -5,6 +5,6 @@ Dir.glob("#{File.dirname(__FILE__)}/**/*.rb").each { |file|
 module Tony
   module Auth
     LoginInfo = Struct.new(:email, :state, keyword_init: true)
-    private_constant :LoginInfo
+    public_constant :LoginInfo
   end
 end
