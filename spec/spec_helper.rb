@@ -17,6 +17,12 @@ RSpec.shared_context(:apparition) do
   include_context(:tony_apparition)
 end
 
+RSpec.shared_context(:rack_test) {
+  include_context(:tony_rack_test)
+
+  let(:app) { Capybara.app }
+}
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.expect_with(:rspec) do |expectations|
@@ -33,6 +39,7 @@ RSpec.configure do |config|
   config.alias_it_should_behave_like_to(:it_has_behavior, 'has behavior:')
 
   config.include_context(:apparition, type: :feature)
+  config.include_context(:rack_test, type: :rack_test)
 
   config.order = :random
   Kernel.srand(config.seed)

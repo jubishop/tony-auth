@@ -1,4 +1,4 @@
-require_relative '../lib/tony/google'
+require_relative '../../lib/tony/google'
 
 FakeRequest = Struct.new(:base_url)
 
