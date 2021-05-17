@@ -1,6 +1,9 @@
 require 'tony/test'
+require 'webmock/rspec'
 
-app = Rack::Builder.parse_file('config.ru').first
+WebMock.disable_net_connect!(allow_localhost: true)
+
+app = Rack::Builder.parse_file('spec/config.ru').first
 RSpec.shared_context(:rack_test) {
   include_context(:tony_rack_test)
 

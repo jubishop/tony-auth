@@ -50,7 +50,8 @@ module Tony
         res = Net::HTTP.get_response(uri)
         info = JSON.parse(res.body)
 
-        state = JSON.parse(Base64.urlsafe_decode64(req.params['state']))
+        state = JSON.parse(
+            Base64.urlsafe_decode64(req.params.fetch('state', 'e30=')))
         state.symbolize_keys!
         req.env[:login_info] = LoginInfo.new(email: info['email'], state: state)
       end

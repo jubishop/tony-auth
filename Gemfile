@@ -15,6 +15,7 @@ group :development do
     gem 'rubocop-performance'
     gem 'rubocop-rake'
     gem 'rubocop-rspec'
+    gem 'webmock'
   end
 
   source 'https://www.jubigems.org' do
