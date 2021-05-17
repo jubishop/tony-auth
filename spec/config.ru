@@ -8,8 +8,8 @@ use Tony::Auth::Google, client_id: GOOGLE_CLIENT_ID, secret: GOOGLE_SECRET
 
 tony = Tony::App.new
 tony.get('/auth/google', ->(req, resp) {
-  resp.write(req.env[:login_info].email)
-  resp.write(req.env[:login_info].state)
+  resp.write(req.env['login_info'].email)
+  resp.write(req.env['login_info'].state)
 })
 
 run tony

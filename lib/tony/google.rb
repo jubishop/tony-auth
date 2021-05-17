@@ -56,8 +56,8 @@ module Tony
         state = JSON.parse(
             Base64.urlsafe_decode64(req.params.fetch('state', 'e30=')))
         state.symbolize_keys!
-        req.env[:login_info] = LoginInfo.new(email: info.fetch('email'),
-                                             state: state)
+        req.env['login_info'] = LoginInfo.new(email: info.fetch('email'),
+                                              state: state)
       end
     end
   end
