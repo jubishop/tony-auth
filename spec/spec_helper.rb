@@ -1,7 +1,7 @@
 require 'tony/test'
 require 'webmock/rspec'
 
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!
 
 app = Rack::Builder.parse_file('spec/config.ru').first
 RSpec.shared_context(:rack_test) {
