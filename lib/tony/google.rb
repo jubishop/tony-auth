@@ -40,20 +40,21 @@ module Tony
             uri,
             client_id: @client_id,
             client_secret: @secret,
-            code: req.params['code'],
+            code: req.params.fetch('code'),
             grant_type: 'authorization_code',
             redirect_uri: "#{req.base_url}#{@path}")
         info = JSON.parse(res.body)
 
         uri = URI('https://oauth2.googleapis.com/tokeninfo')
-        uri.query = URI.encode_www_form(id_token: info['id_token'])
+        uri.query = URI.encode_www_form(id_token: info.fetch('id_token'))
         res = Net::HTTP.get_response(uri)
         info = JSON.parse(res.body)
 
         state = JSON.parse(
             Base64.urlsafe_decode64(req.params.fetch('state', 'e30=')))
         state.symbolize_keys!
-        req.env[:login_info] = LoginInfo.new(email: info['email'], state: state)
+        req.env[:login_info] = LoginInfo.new(email: info.fetch('email'),
+                                             state: state)
       end
     end
   end
