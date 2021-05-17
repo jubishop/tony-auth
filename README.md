@@ -30,7 +30,9 @@ In a view file, you can link to log in like this:
 a href=Tony::Auth::Google.url(req, redirect: '/') Sign in with Google
 ```
 
-The `state` variable will hold whatever key/value pairs you pass (in this case, `redirect: '/'`).
+`req` should be an instance of [`Rack::Request`](https://github.com/rack/rack/blob/master/lib/rack/request.rb) associated with the current request.
+
+You may pass any other key value pairs you wish (in this case, `redirect: '/'`), and they will get passed back to you in the `state` variable.
 
 Finally, in your controller, add a hook for `/auth/google`.  The `req.env[:login_info]` will be an object with an `email` and `state` attribute:
 
