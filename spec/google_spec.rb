@@ -42,6 +42,12 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
       get '/auth/google', { code: 'google_code', state: state }
 
       expect(last_response.body).to(have_content('jubi@github.com'))
+    }
+
+    it('passes through state properly') {
+      state = Base64.urlsafe_encode64(JSON.dump({ key: 'value' }),
+                                      padding: false)
+      get '/auth/google', { code: 'google_code', state: state }
       expect(last_response.body).to(have_content('{:key=>"value"}'))
     }
   }
