@@ -51,4 +51,12 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
       expect(last_response.body).to(have_content('{:key=>"value"}'))
     }
   }
+
+  context('assertions') {
+    it('refuses to create same instance twice') {
+      expect {
+        Tony::Auth::Google.new(nil, client_id: 'id', secret: 'secret')
+      }.to(raise_error(ArgumentError))
+    }
+  }
 }

@@ -17,7 +17,10 @@ module Tony
       end
 
       def initialize(app, client_id:, secret:, path: '/auth/google')
-        raise ArgumentError if @@paths.key?(path)
+        if @@paths.key?(path)
+          raise(ArgumentError,
+                "Tony::Auth::Google created with exact same path: #{path}")
+        end
 
         @@paths[path] = client_id
         @app = app
