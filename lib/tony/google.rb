@@ -1,3 +1,5 @@
+require 'json'
+
 module Tony
   module Auth
     class Google

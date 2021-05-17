@@ -6,9 +6,9 @@ end
 
 group :development do
   source 'https://www.rubygems.org' do
-    gem 'apparition'
     gem 'capybara'
     gem 'puma'
+    gem 'rack-test'
     gem 'rake'
     gem 'rspec'
     gem 'rubocop'
