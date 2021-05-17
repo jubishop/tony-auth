@@ -1,5 +1,4 @@
 require 'capybara/apparition'
-require 'core/test'
 require 'tony/test'
 
 Capybara.server = :puma
