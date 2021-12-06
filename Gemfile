@@ -1,22 +1,19 @@
 ruby '>= 3'
+source 'https://rubygems.org'
 
-source 'https://www.rubygems.org' do
-  gem 'base64'
-end
+gem 'base64'
 
 group :development do
-  source 'https://www.rubygems.org' do
-    gem 'capybara'
-    gem 'puma'
-    gem 'rack-test'
-    gem 'rake'
-    gem 'rspec'
-    gem 'rubocop'
-    gem 'rubocop-performance'
-    gem 'rubocop-rake'
-    gem 'rubocop-rspec'
-    gem 'webmock'
-  end
+  gem 'capybara'
+  gem 'puma'
+  gem 'rack-test'
+  gem 'rake'
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'rubocop-performance'
+  gem 'rubocop-rake'
+  gem 'rubocop-rspec'
+  gem 'webmock'
 
   source 'https://www.jubigems.org' do
     gem 'core'
