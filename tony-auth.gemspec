@@ -11,7 +11,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'bin'
   spec.executables   = []
   spec.metadata      = {
-    'source_code_uri' => 'https://github.com/jubishop/tony-auth'
+    'source_code_uri' => 'https://github.com/jubishop/tony-auth',
+    'rubygems_mfa_required' => 'true'
   }
   spec.required_ruby_version = Gem::Requirement.new('>= 3.0')
   spec.add_dependency('base64')
