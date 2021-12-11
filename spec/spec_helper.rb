@@ -25,8 +25,8 @@ RSpec.configure do |config|
   config.default_formatter = 'doc'
   config.alias_it_should_behave_like_to(:it_has_behavior, 'has behavior:')
 
-  config.include_context(:rack_test, type: :rack_test)
-
   config.order = :random
   Kernel.srand(config.seed)
+
+  config.include_context(:rack_test, type: :rack_test)
 end
