@@ -44,6 +44,37 @@ get('/auth/google', ->(req, resp) {
 })
 ```
 
+## Testing Code that Uses `tony-auth`
+
+Testing `tony-auth` endpoints can be tricky at first glance.  Here's how you could test in `RSpec` and `rack-test` (using `tony-test`) the `/auth/google` endpoint in the example provided above.
+
+```ruby
+require 'securerandom'
+
+RSpec.describe(Main, type: :rack_test) {
+  context('get /auth/google') {
+    before(:each) {
+      allow(Tony::Auth::Google).to(receive(:url)).and_return(
+          SecureRandom.alphanumeric(24))
+      @login_info = Tony::Auth::LoginInfo.new(email: 'test@email.com',
+                                              state: { redirect: '/onward' })
+    }
+
+    it('sets the email address') {
+      set_cookie(:email, 'nomnomnom')
+      get '/auth/google', {}, { 'login_info' => @login_info }
+      expect(get_cookie(:email)).to(eq('test@email.com'))
+    }
+
+    it('redirects to :r in state') {
+      get '/auth/google', {}, { 'login_info' => @login_info }
+      expect(last_response.redirect?).to(be(true))
+      expect(last_response.location).to(eq('/onward'))
+    }
+  }
+}
+```
+
 ## More Documentation
 
 - [Rubydoc](https://www.rubydoc.info/github/jubishop/tony-auth/master)
