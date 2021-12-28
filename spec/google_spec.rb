@@ -24,11 +24,13 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
     }
   }
 
-  context('fetching login info') {
+  shared_examples('login') {
     before(:each) {
-      stub_request(:post, 'https://oauth2.googleapis.com/token').with(
-          body: hash_including({ code: 'google_code' })).to_return(
-              body: '{"id_token": "google_id_token"}')
+      stub_request(
+          :post,
+          'https://oauth2.googleapis.com/token').with(
+              body: hash_including({ code: 'google_code' }))
+        .to_return(body: '{"id_token": "google_id_token"}')
 
       stub_request(
           :get,
@@ -39,24 +41,33 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
     it('fetches email') {
       state = Base64.urlsafe_encode64(JSON.dump({ key: 'value' }),
                                       padding: false)
-      get '/auth/google', { code: 'google_code', state: state }
-
+      get auth_path, { code: 'google_code', state: state }
       expect(last_response.body).to(have_content('jubi@github.com'))
     }
 
     it('passes through state properly') {
       state = Base64.urlsafe_encode64(JSON.dump({ key: 'value' }),
                                       padding: false)
-      get '/auth/google', { code: 'google_code', state: state }
+      get auth_path, { code: 'google_code', state: state }
       expect(last_response.body).to(have_content('{:key=>"value"}'))
     }
   }
 
+  context('/auth/google') {
+    let(:auth_path) { '/auth/google' }
+    it_has_behavior 'login'
+  }
+
+  context('/some_other_auth/google') {
+    let(:auth_path) { '/some_other_auth/google' }
+    it_has_behavior 'login'
+  }
+
   context('assertions') {
     it('refuses to create same instance twice') {
-      expect {
-        Tony::Auth::Google.new(nil, client_id: 'id', secret: 'secret')
-      }.to(raise_error(ArgumentError))
+      expect { Tony::Auth::Google.new(nil, client_id: 'id', secret: 'secret') }
+        .to(raise_error(ArgumentError,
+                        /Tony::Auth::Google created twice with same path/))
     }
   }
 }

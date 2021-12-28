@@ -1,3 +1,4 @@
+require 'core'
 require 'json'
 require 'net/http'
 
@@ -20,7 +21,7 @@ module Tony
       def initialize(app, client_id:, secret:, path: '/auth/google')
         if @@paths.key?(path)
           raise(ArgumentError,
-                "Tony::Auth::Google created with exact same path: #{path}")
+                "Tony::Auth::Google created twice with same path: #{path}")
         end
 
         @@paths[path] = client_id
@@ -32,7 +33,7 @@ module Tony
 
       def call(env)
         req = Rack::Request.new(env)
-        fetch_login_info(req) if req.path == '/auth/google'
+        fetch_login_info(req) if req.path == @path
         @app.call(env)
       end
 
