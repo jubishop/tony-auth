@@ -53,12 +53,12 @@ module Tony
         uri = URI('https://oauth2.googleapis.com/tokeninfo')
         uri.query = URI.encode_www_form(id_token: info.fetch('id_token'))
         res = Net::HTTP.get_response(uri)
-        info = JSON.parse(res.body)
-
+        info = JSON.parse(res.body).symbolize_keys!
         state = JSON.parse(
             Base64.urlsafe_decode64(req.params.fetch('state', 'e30=')))
         state.symbolize_keys!
-        req.env['login_info'] = LoginInfo.new(email: info.fetch('email'),
+        req.env['login_info'] = LoginInfo.new(email: info.fetch(:email),
+                                              info: info,
                                               state: state)
       end
     end

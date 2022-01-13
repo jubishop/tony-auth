@@ -32,14 +32,15 @@ a href=Tony::Auth::Google.url(req, redirect: '/') Sign in with Google
 
 `req` should be an instance of [`Rack::Request`](https://github.com/rack/rack/blob/master/lib/rack/request.rb) associated with the current request.
 
-You may pass any other key value pairs you wish (in this case, `redirect: '/'`), and they will get passed back to you in the `state` variable.
+If you want to have a different path than `/auth/google`, you can pass it as `path:`.  Finally, if you want to request a scope beyond simply `email`, you can pass it as `scope:`.  The entire JSON decoded object returned from Google will be given in the `info` attribute.  You may pass any other key value pairs you wish (in this case, `redirect: '/'`), and they will get passed back to you in the `state` attribute.
 
-Finally, in your controller, add a hook for `/auth/google`.  The `req.env[:login_info]` will be an object with an `email` and `state` attribute:
+Finally, in your controller, add a hook for `/auth/google` (or whatever you set your `path:` to).  The `req.env[:login_info]` will be a `LoginInfo` object with an `email`, `info`, and `state` attribute:
 
 ```ruby
 get('/auth/google', ->(req, resp) {
   login_info = req.env[:login_info]
   resp.set_cookie(:email_address, login_info.email)
+  puts "Full JSON object given is: #{login_info.info}"
   resp.redirect(login_info.state[:redirect])
 })
 ```
