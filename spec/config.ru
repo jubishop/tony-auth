@@ -9,14 +9,15 @@ use Tony::Auth::Google, client_id: GOOGLE_CLIENT_ID,
                         secret: GOOGLE_SECRET,
                         path: '/some_other_auth/google'
 
+response = ->(req, resp) {
+  return 404, 'No login_info' unless req.env.key?('login_info')
+
+  resp.write(req.env['login_info'].email)
+  resp.write(req.env['login_info'].state)
+}
+
 tony = Tony::App.new
-tony.get('/auth/google', ->(req, resp) {
-  resp.write(req.env['login_info'].email)
-  resp.write(req.env['login_info'].state)
-})
-tony.get('/some_other_auth/google', ->(req, resp) {
-  resp.write(req.env['login_info'].email)
-  resp.write(req.env['login_info'].state)
-})
+tony.get('/auth/google', response)
+tony.get('/some_other_auth/google', response)
 
 run tony

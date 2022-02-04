@@ -51,6 +51,11 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
       get auth_path, { code: 'google_code', state: state }
       expect(last_response.body).to(have_content('{:key=>"value"}'))
     }
+
+    it('fails gracefully if no code in request') {
+      get auth_path
+      expect(last_response.status).to(be(404))
+    }
   }
 
   context('/auth/google') {

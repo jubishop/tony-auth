@@ -33,7 +33,7 @@ module Tony
 
       def call(env)
         req = Rack::Request.new(env)
-        fetch_login_info(req) if req.path == @path
+        fetch_login_info(req) if req.path == @path && req.params.key?('code')
         @app.call(env)
       end
 
@@ -48,10 +48,10 @@ module Tony
             code: req.params.fetch('code'),
             grant_type: 'authorization_code',
             redirect_uri: "#{req.base_url}#{@path}")
-        info = JSON.parse(res.body)
+        info = JSON.parse(res.body).symbolize_keys!
 
         uri = URI('https://oauth2.googleapis.com/tokeninfo')
-        uri.query = URI.encode_www_form(id_token: info.fetch('id_token'))
+        uri.query = URI.encode_www_form(id_token: info.fetch(:id_token))
         res = Net::HTTP.get_response(uri)
         info = JSON.parse(res.body).symbolize_keys!
         state = JSON.parse(
