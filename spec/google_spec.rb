@@ -1,3 +1,5 @@
+require 'webmock/rspec'
+
 require_relative '../lib/tony/google'
 
 FakeRequest = Struct.new(:base_url)
@@ -29,20 +31,26 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
       stub_request(
           :post,
           'https://oauth2.googleapis.com/token').with(
-              body: hash_including({ code: 'google_code' }))
+              body: {
+                client_id: GOOGLE_CLIENT_ID,
+                client_secret: GOOGLE_SECRET,
+                code: 'google_code',
+                grant_type: 'authorization_code',
+                redirect_uri: "http://example.org#{auth_path}"
+              })
         .to_return(body: '{"id_token": "google_id_token"}')
 
       stub_request(
           :get,
           'https://oauth2.googleapis.com/tokeninfo?id_token=google_id_token')
-        .to_return(body: JSON.dump({ email: 'jubi@github.com' }))
+        .to_return(body: JSON.dump({ email: 'jubi@google.com' }))
     }
 
     it('fetches email') {
       state = Base64.urlsafe_encode64(JSON.dump({ key: 'value' }),
                                       padding: false)
       get auth_path, { code: 'google_code', state: state }
-      expect(last_response.body).to(have_content('jubi@github.com'))
+      expect(last_response.body).to(have_content('jubi@google.com'))
     }
 
     it('passes through state properly') {
@@ -69,14 +77,14 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
   }
 
   context('assertions') {
-    it('refuses to create same instance twice') {
+    it('refuses to create same instance twice in production') {
+      ENV['APP_ENV'] = 'production'
       expect { Tony::Auth::Google.new(nil, client_id: 'id', secret: 'secret') }
         .to(raise_error(ArgumentError,
                         /Tony::Auth::Google created twice with same path/))
     }
 
     it('allows creation of same instance in test context') {
-      ENV['APP_ENV'] = 'test'
       expect { Tony::Auth::Google.new(nil, client_id: 'id', secret: 'secret') }
         .to_not(raise_error)
     }

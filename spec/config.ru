@@ -1,13 +1,14 @@
 require_relative '../lib/tony/auth'
 require_relative '../lib/tony/google'
 
-GOOGLE_CLIENT_ID = 'client_id'.freeze
-GOOGLE_SECRET = 'secret'.freeze
-
 use Tony::Auth::Google, client_id: GOOGLE_CLIENT_ID, secret: GOOGLE_SECRET
 use Tony::Auth::Google, client_id: GOOGLE_CLIENT_ID,
                         secret: GOOGLE_SECRET,
                         path: '/some_other_auth/google'
+use Tony::Auth::Github, client_id: GITHUB_CLIENT_ID, secret: GITHUB_SECRET
+use Tony::Auth::Github, client_id: GITHUB_CLIENT_ID,
+                        secret: GITHUB_SECRET,
+                        path: '/some_other_auth/github'
 
 response = ->(req, resp) {
   return 404, 'No login_info' unless req.env.key?('login_info')
@@ -19,5 +20,7 @@ response = ->(req, resp) {
 tony = Tony::App.new
 tony.get('/auth/google', response)
 tony.get('/some_other_auth/google', response)
+tony.get('/auth/github', response)
+tony.get('/some_other_auth/github', response)
 
 run tony

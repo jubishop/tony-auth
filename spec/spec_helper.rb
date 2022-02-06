@@ -1,6 +1,14 @@
 require 'tony/test'
 require 'webmock/rspec'
 
+ENV['APP_ENV'] = 'test'
+ENV['RACK_ENV'] = 'test'
+
+GOOGLE_CLIENT_ID = 'google_client_id'.freeze
+GOOGLE_SECRET = 'google_secret'.freeze
+GITHUB_CLIENT_ID = 'github_client_id'.freeze
+GITHUB_SECRET = 'github_secret'.freeze
+
 WebMock.disable_net_connect!
 
 app = Rack::Builder.parse_file('spec/config.ru').first
@@ -29,4 +37,10 @@ RSpec.configure do |config|
   Kernel.srand(config.seed)
 
   config.include_context(:rack_test, type: :rack_test)
+
+  config.after(:each) {
+    ENV['APP_ENV'] = 'test'
+    ENV['RACK_ENV'] = 'test'
+    Rack::Builder.parse_file('spec/config.ru')
+  }
 end

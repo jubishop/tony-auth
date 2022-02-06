@@ -1,27 +1,27 @@
 require 'core'
 require 'json'
 require 'net/http'
+require 'uri'
 
 module Tony
   module Auth
-    class Google
+    class Github
       @@paths = {}
-      def self.url(req, path: '/auth/google', scope: 'email', **state)
+      def self.url(req, path: '/auth/github', scope: 'user:email', **state)
         client_id = @@paths.fetch(path)
-        uri = URI('https://accounts.google.com/o/oauth2/v2/auth')
+        uri = URI('https://github.com/login/oauth/authorize')
         uri.query = URI.encode_www_form(
             client_id: client_id,
             redirect_uri: "#{req.base_url}#{path}",
-            response_type: 'code',
             scope: scope,
             state: Base64.urlsafe_encode64(JSON.dump(state), padding: false))
         return uri.to_s
       end
 
-      def initialize(app, client_id:, secret:, path: '/auth/google')
+      def initialize(app, client_id:, secret:, path: '/auth/github')
         if ENV['APP_ENV'] != 'test' && @@paths.key?(path)
           raise(ArgumentError,
-                "Tony::Auth::Google created twice with same path: #{path}")
+                "Tony::Auth::Github created twice with same path: #{path}")
         end
 
         @@paths[path] = client_id
@@ -40,18 +40,25 @@ module Tony
       private
 
       def fetch_login_info(req)
-        response = Net::HTTP.post_form(
-            URI('https://oauth2.googleapis.com/token'),
-            client_id: @client_id,
-            client_secret: @secret,
-            code: req.params.fetch('code'),
-            grant_type: 'authorization_code',
-            redirect_uri: "#{req.base_url}#{@path}")
+        uri = URI.parse('https://github.com/login/oauth/access_token')
+        request = Net::HTTP::Post.new(uri)
+        request['Accept'] = 'application/json'
+        request.set_form_data(client_id: @client_id,
+                              client_secret: @secret,
+                              code: req.params.fetch('code'),
+                              redirect_uri: "#{req.base_url}#{@path}")
+        req_options = { use_ssl: uri.scheme == 'https' }
+        response = Net::HTTP.start(uri.hostname, uri.port, req_options) { |http|
+          http.request(request)
+        }
         info = JSON.parse(response.body).symbolize_keys!
 
-        uri = URI('https://oauth2.googleapis.com/tokeninfo')
-        uri.query = URI.encode_www_form(id_token: info.fetch(:id_token))
-        response = Net::HTTP.get_response(uri)
+        uri = URI.parse('https://api.github.com/user')
+        request = Net::HTTP::Get.new(uri)
+        request['Authorization'] = "token #{info[:access_token]}"
+        response = Net::HTTP.start(uri.hostname, uri.port, req_options) { |http|
+          http.request(request)
+        }
         info = JSON.parse(response.body).symbolize_keys!
 
         state = JSON.parse(
