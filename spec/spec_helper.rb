@@ -4,12 +4,16 @@ require 'webmock/rspec'
 ENV['APP_ENV'] = 'test'
 ENV['RACK_ENV'] = 'test'
 
+AUTH_CODE = 'auth_code'.freeze
+USER_EMAIL = 'user_email'.freeze
 GOOGLE_CLIENT_ID = 'google_client_id'.freeze
 GOOGLE_SECRET = 'google_secret'.freeze
 GITHUB_CLIENT_ID = 'github_client_id'.freeze
 GITHUB_SECRET = 'github_secret'.freeze
 
 WebMock.disable_net_connect!
+
+FakeRequest = Struct.new(:base_url)
 
 app = Rack::Builder.parse_file('spec/config.ru').first
 RSpec.shared_context(:rack_test) {
