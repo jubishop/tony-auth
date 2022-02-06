@@ -74,5 +74,11 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
         .to(raise_error(ArgumentError,
                         /Tony::Auth::Google created twice with same path/))
     }
+
+    it('allows creation of same instance in test context') {
+      ENV['APP_ENV'] = 'test'
+      expect { Tony::Auth::Google.new(nil, client_id: 'id', secret: 'secret') }
+        .to_not(raise_error)
+    }
   }
 }

@@ -19,7 +19,7 @@ module Tony
       end
 
       def initialize(app, client_id:, secret:, path: '/auth/google')
-        if @@paths.key?(path)
+        if ENV['APP_ENV'] != 'test' && @@paths.key?(path)
           raise(ArgumentError,
                 "Tony::Auth::Google created twice with same path: #{path}")
         end
