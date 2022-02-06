@@ -5,8 +5,7 @@ require 'uri'
 
 module Tony
   module Auth
-    class Github
-      @@paths = {}
+    class Github < Base
       def self.url(req, path: '/auth/github', scope: 'user:email', **state)
         client_id = @@paths.fetch(path)
         uri = URI('https://github.com/login/oauth/authorize')
@@ -18,26 +17,11 @@ module Tony
         return uri.to_s
       end
 
-      def initialize(app, client_id:, secret:, path: '/auth/github')
-        if ENV['APP_ENV'] != 'test' && @@paths.key?(path)
-          raise(ArgumentError,
-                "Tony::Auth::Github created twice with same path: #{path}")
-        end
-
-        @@paths[path] = client_id
-        @app = app
-        @path = path
-        @client_id = client_id
-        @secret = secret
-      end
-
-      def call(env)
-        req = Rack::Request.new(env)
-        fetch_login_info(req) if req.path == @path && req.params.key?('code')
-        @app.call(env)
-      end
-
       private
+
+      def default_path
+        return '/auth/github'
+      end
 
       def fetch_login_info(req)
         uri = URI.parse('https://github.com/login/oauth/access_token')

@@ -4,7 +4,7 @@ require 'net/http'
 
 module Tony
   module Auth
-    class Google
+    class Google < Base
       @@paths = {}
       def self.url(req, path: '/auth/google', scope: 'email', **state)
         client_id = @@paths.fetch(path)
@@ -18,26 +18,11 @@ module Tony
         return uri.to_s
       end
 
-      def initialize(app, client_id:, secret:, path: '/auth/google')
-        if ENV['APP_ENV'] != 'test' && @@paths.key?(path)
-          raise(ArgumentError,
-                "Tony::Auth::Google created twice with same path: #{path}")
-        end
-
-        @@paths[path] = client_id
-        @app = app
-        @path = path
-        @client_id = client_id
-        @secret = secret
-      end
-
-      def call(env)
-        req = Rack::Request.new(env)
-        fetch_login_info(req) if req.path == @path && req.params.key?('code')
-        @app.call(env)
-      end
-
       private
+
+      def default_path
+        return '/auth/google'
+      end
 
       def fetch_login_info(req)
         response = Net::HTTP.post_form(
