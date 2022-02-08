@@ -4,11 +4,13 @@ require 'json'
 require 'net/http'
 require 'uri'
 
-# This code does not fully work, but is left here for future reference.
 module Tony
   module Auth
-    class TwitterOAuth2 < Base
-      def self.url(req, path: '/auth/twitter', scope: 'users.read', **state)
+    class Twitter < Base
+      def self.url(req,
+                   path: '/auth/twitter',
+                   scope: 'tweet.read users.read',
+                   **state)
         client_id = @@paths.fetch(path)
         uri = URI('https://twitter.com/i/oauth2/authorize')
         uri.query = URI.encode_www_form(
@@ -42,9 +44,7 @@ module Tony
           http.request(request)
         }
         info = JSON.parse(response.body).symbolize_keys!
-        puts info
 
-        # Forbidden, for some reason?
         uri = URI.parse('https://api.twitter.com/2/users/me')
         request = Net::HTTP::Get.new(uri)
         request['Authorization'] = "Bearer #{info[:access_token]}"

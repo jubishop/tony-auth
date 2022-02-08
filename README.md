@@ -23,6 +23,12 @@ The interface for each class is the same except for their default `path`.  The c
 - Google: `Tony::Auth::Google`, `/auth/google`
 - Github: `Tony::Auth::Github`, `/auth/github`
 
+### Twitter
+
+Twitter does not work until an OAuth V2 replacement is announced for `account/verify_credentials`.
+
+- Twitter: `Tony::Auth::Twitter`, `/auth/twitter`
+
 ### Google (Full Example)
 
 Here is an example of how you'd use `Tony::Auth::Google`.  The approach would be the same for all other classes.
