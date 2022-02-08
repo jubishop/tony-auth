@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module Tony
   module Auth
     LoginInfo = Struct.new(:email, :info, :state, keyword_init: true)

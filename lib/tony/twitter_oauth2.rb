@@ -1,7 +1,7 @@
+require 'base64'
 require 'core'
 require 'json'
 require 'net/http'
-require 'securerandom'
 require 'uri'
 
 # This code does not fully work, but is left here for future reference.

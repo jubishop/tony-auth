@@ -1,3 +1,4 @@
+require 'base64'
 require 'core'
 require 'json'
 require 'net/http'
