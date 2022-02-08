@@ -3,6 +3,10 @@ source 'https://rubygems.org'
 
 gem 'base64'
 
+source 'https://www.jubigems.org' do
+  gem 'core'
+end
+
 group :development do
   gem 'capybara'
   gem 'puma'
@@ -16,7 +20,6 @@ group :development do
   gem 'webmock'
 
   source 'https://www.jubigems.org' do
-    gem 'core'
     gem 'core-test'
     gem 'rakegem'
     gem 'tony'

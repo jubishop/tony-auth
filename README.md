@@ -10,6 +10,7 @@ Middlewares to help login with 3rd party services.
 
 ```ruby
 source: 'https://www.jubigems.org/' do
+  gem 'core'
   gem 'tony-auth'
 end
 ```
