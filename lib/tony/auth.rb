@@ -4,8 +4,13 @@ module Tony
     public_constant :LoginInfo
 
     class Base
-      @@paths = {}
+      @@codes = {}
+      def self.code(path)
+        @@codes[path] ||= SecureRandom.alphanumeric(24)
+        return @@codes[path]
+      end
 
+      @@paths = {}
       def initialize(app, client_id:, secret:, path: default_path)
         if ENV['APP_ENV'] != 'test' && @@paths.key?(path)
           raise(ArgumentError,
@@ -23,6 +28,12 @@ module Tony
         req = Rack::Request.new(env)
         fetch_login_info(req) if req.path == @path && req.params.key?('code')
         @app.call(env)
+      end
+
+      private
+
+      def basic_token
+        return Base64.urlsafe_encode64("#{@client_id}:#{@secret}")
       end
     end
   end
