@@ -23,6 +23,7 @@ The interface for each class is the same except for their default `path`.  The c
 
 - Google: `Tony::Auth::Google`, `/auth/google`
 - Github: `Tony::Auth::Github`, `/auth/github`
+- Facebook: `Tony::Auth::Facebook`, `/auth/facebook`
 
 ### Twitter
 
