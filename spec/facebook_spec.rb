@@ -32,7 +32,10 @@ RSpec.describe(Tony::Auth::Facebook, type: :rack_test) {
       stub_request(
           :get,
           'https://graph.facebook.com/me').with(
-              query: { fields: 'email', access_token: 'facebook_access_token' })
+              query: {
+                fields: 'email,picture',
+                access_token: 'facebook_access_token'
+              })
         .to_return(body: JSON.dump({ email: USER_EMAIL }))
     }
   }

@@ -38,7 +38,7 @@ module Tony
         info = JSON.parse(response.body).symbolize_keys!
 
         uri = URI.parse('https://graph.facebook.com/me')
-        uri.query = URI.encode_www_form(fields: 'email',
+        uri.query = URI.encode_www_form(fields: 'email,picture',
                                         access_token: info[:access_token])
         response = Net::HTTP.get_response(uri)
         info = JSON.parse(response.body).symbolize_keys!
