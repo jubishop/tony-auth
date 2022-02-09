@@ -28,7 +28,7 @@ RSpec.describe(Tony::Auth::Github, type: :rack_test) {
               redirect_uri: ["http://example.org#{auth_path}"]
             } && request.headers.fetch('Accept') == 'application/json'
           }
-        .to_return(body: '{"access_token": "github_access_token"}')
+        .to_return(body: JSON.dump({ access_token: 'github_access_token' }))
 
       stub_request(
           :get,

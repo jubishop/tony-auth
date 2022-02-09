@@ -27,7 +27,7 @@ RSpec.describe(Tony::Auth::Google, type: :rack_test) {
                 grant_type: 'authorization_code',
                 redirect_uri: "http://example.org#{auth_path}"
               })
-        .to_return(body: '{"id_token": "google_id_token"}')
+        .to_return(body: JSON.dump({ id_token: 'google_id_token' }))
 
       stub_request(
           :get,

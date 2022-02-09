@@ -10,6 +10,8 @@ GOOGLE_CLIENT_ID = 'google_client_id'.freeze
 GOOGLE_SECRET = 'google_secret'.freeze
 GITHUB_CLIENT_ID = 'github_client_id'.freeze
 GITHUB_SECRET = 'github_secret'.freeze
+FACEBOOK_CLIENT_ID = 'facebook_client_id'.freeze
+FACEBOOK_SECRET = 'facebook_secret'.freeze
 
 WebMock.disable_net_connect!
 

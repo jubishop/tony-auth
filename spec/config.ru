@@ -9,6 +9,10 @@ use Tony::Auth::Github, client_id: GITHUB_CLIENT_ID, secret: GITHUB_SECRET
 use Tony::Auth::Github, client_id: GITHUB_CLIENT_ID,
                         secret: GITHUB_SECRET,
                         path: '/some_other_auth/github'
+use Tony::Auth::Facebook, client_id: FACEBOOK_CLIENT_ID, secret: FACEBOOK_SECRET
+use Tony::Auth::Facebook, client_id: FACEBOOK_CLIENT_ID,
+                          secret: FACEBOOK_SECRET,
+                          path: '/some_other_auth/facebook'
 
 response = ->(req, resp) {
   return 404, 'No login_info' unless req.env.key?('login_info')
@@ -22,5 +26,7 @@ tony.get('/auth/google', response)
 tony.get('/some_other_auth/google', response)
 tony.get('/auth/github', response)
 tony.get('/some_other_auth/github', response)
+tony.get('/auth/facebook', response)
+tony.get('/some_other_auth/facebook', response)
 
 run tony
